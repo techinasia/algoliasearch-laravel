@@ -159,8 +159,6 @@ trait AlgoliaEloquentTrait
         /** @var \AlgoliaSearch\Laravel\ModelHelper $modelHelper */
         $modelHelper = App::make('\AlgoliaSearch\Laravel\ModelHelper');
 
-        $settings = $modelHelper->getSettings($this);
-
         if ($setToTmpIndices === false) {
             $indices = $modelHelper->getIndices($this);
         }
@@ -168,18 +166,20 @@ trait AlgoliaEloquentTrait
             $indices = $modelHelper->getIndicesTmp($this);
         }
 
-        $replicas_settings = $modelHelper->getReplicasSettings($this);
-        $replicas = isset($settings['replicas']) ? $settings['replicas'] : [];
-
-        // Backward compatibility
-        if ($replicas === [] && isset($settings['slaves'])) {
-            $replicas = $settings['slaves'];
-        }
-
-        $b = true;
-
         /** @var \AlgoliaSearch\Index $index */
         foreach ($indices as $key => $index) {
+            $b = true;
+
+            $settings = $modelHelper->getSettings($this, $key);
+
+            $replicas_settings = $modelHelper->getReplicasSettings($this, $key);
+            $replicas = isset($settings['replicas']) ? $settings['replicas'] : [];
+
+            // Backward compatibility
+            if ($replicas === [] && isset($settings['slaves'])) {
+                $replicas = $settings['slaves'];
+            }
+
             if ($mergeOldSettings) {
                 $old_indices = $modelHelper->getIndices($this);
                 $old_index = $old_indices[$key];
@@ -243,17 +243,15 @@ trait AlgoliaEloquentTrait
                 unset($settings['replicas']);
                 unset($settings['slaves']); // backward compatibility
             }
-        }
 
-        foreach ($replicas as $replica) {
-            if (isset($replicas_settings[$replica])) {
-                $index = $modelHelper->getIndices($this, $replica)[0];
+            foreach ($replicas as $replica) {
+                if (isset($replicas_settings[$replica])) {
+                    $s = array_merge($settings, $replicas_settings[$replica]);
+                    unset($s['synonyms']);
 
-                $s = array_merge($settings, $replicas_settings[$replica]);
-                unset($s['synonyms']);
-
-                if (count(array_keys($s)) > 0)
-                    $index->setSettings($s);
+                    if (count(array_keys($s)) > 0)
+                        $index->setSettings($s);
+                }
             }
         }
     }

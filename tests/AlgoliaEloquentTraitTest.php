@@ -5,6 +5,7 @@ namespace AlgoliaSearch\Tests;
 use AlgoliaSearch\Tests\Models\Model11;
 use AlgoliaSearch\Tests\Models\Model12;
 use AlgoliaSearch\Tests\Models\Model13;
+use AlgoliaSearch\Tests\Models\Model15;
 use AlgoliaSearch\Tests\Models\Model2;
 use AlgoliaSearch\Tests\Models\Model4;
 use AlgoliaSearch\Tests\Models\Model6;
@@ -139,6 +140,38 @@ class AlgoliaEloquentTraitTest extends TestCase
         $this->assertEquals(1, 1);
 
         $model13->setSettings(false, true);
+    }
+
+    public function testSetSettingsPerIndex()
+    {
+        $index1 = Mockery::mock('\AlgoliaSearch\Index');
+        $index1->shouldReceive('clearSynonyms');
+
+        $index1->shouldReceive('setSettings')->with([
+            'replicas' => []
+        ]);
+
+        $index2 = Mockery::mock('\AlgoliaSearch\Index');
+        $index2->shouldReceive('clearSynonyms');
+
+        $index2->shouldReceive('setSettings')->with([
+            'replicas' => ['model_15_desc'],
+        ]);
+        $index2->shouldReceive('setSettings')->with([
+            'ranking' => ['desc(name)'],
+        ]);
+
+        $modelHelper = Mockery::mock('\AlgoliaSearch\Laravel\ModelHelper')->makePartial();
+        $modelHelper->shouldReceive('getIndices')->andReturn([
+            'index1' => $index1,
+            'index2' => $index2,
+        ]);
+
+        App::instance('\AlgoliaSearch\Laravel\ModelHelper', $modelHelper);
+
+        $model15 = new Model15();
+
+        $this->assertEquals(null, $model15->setSettings());
     }
 
     public function testSetSynonyms()
