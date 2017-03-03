@@ -12,7 +12,7 @@ class Model15 extends Model
     public function algoliaSettings($indexName)
     {
         return [
-            'replicas' => $indexName === 'index1' ? [] : ['model_14_desc']
+            'replicas' => $indexName === 'index1' ? [] : ['model_15_desc']
         ];
     }
 
@@ -23,7 +23,7 @@ class Model15 extends Model
         }
 
         return [
-            'model_14_desc' => [
+            'model_15_desc' => [
                 'ranking' => [
                     'desc(name)'
                 ]

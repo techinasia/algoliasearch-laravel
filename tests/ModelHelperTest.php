@@ -89,7 +89,7 @@ class ModelHelperTest extends TestCase
         $this->assertEquals(['replicas' => ['contacts_desc']], $this->modelHelper->getSettings(new Model14()));
 
         $this->assertEquals(['replicas' => []], $this->modelHelper->getSettings(new Model15(), 'index1'));
-        $this->assertEquals(['replicas' => ['model_14_desc']], $this->modelHelper->getSettings(new Model15(), 'index2'));
+        $this->assertEquals(['replicas' => ['model_15_desc']], $this->modelHelper->getSettings(new Model15(), 'index2'));
     }
 
     public function testGetReplicaSettings()
@@ -97,6 +97,6 @@ class ModelHelperTest extends TestCase
         $this->assertEquals(['contacts_desc' => ['ranking' => ['desc(name)']]], $this->modelHelper->getReplicasSettings(new Model14()));
 
         $this->assertEquals([], $this->modelHelper->getReplicasSettings(new Model15(), 'index1'));
-        $this->assertEquals(['model_14_desc' => ['ranking' => ['desc(name)']]], $this->modelHelper->getReplicasSettings(new Model15(), 'index2'));
+        $this->assertEquals(['model_15_desc' => ['ranking' => ['desc(name)']]], $this->modelHelper->getReplicasSettings(new Model15(), 'index2'));
     }
 }
