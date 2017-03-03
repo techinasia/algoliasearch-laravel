@@ -3,6 +3,8 @@
 namespace AlgoliaSearch\Tests;
 
 use AlgoliaSearch\Tests\Models\Model1;
+use AlgoliaSearch\Tests\Models\Model14;
+use AlgoliaSearch\Tests\Models\Model15;
 use AlgoliaSearch\Tests\Models\Model2;
 use AlgoliaSearch\Tests\Models\Model3;
 use AlgoliaSearch\Tests\Models\Model4;
@@ -80,5 +82,21 @@ class ModelHelperTest extends TestCase
 
         $this->assertCount(2, $indices);
         $this->assertEquals('index1', $indices[0]->indexName);
+    }
+
+    public function testGetSettings()
+    {
+        $this->assertEquals(['replicas' => ['contacts_desc']], $this->modelHelper->getSettings(new Model14()));
+
+        $this->assertEquals(['replicas' => []], $this->modelHelper->getSettings(new Model15(), 'index1'));
+        $this->assertEquals(['replicas' => ['model_14_desc']], $this->modelHelper->getSettings(new Model15(), 'index2'));
+    }
+
+    public function testGetReplicaSettings()
+    {
+        $this->assertEquals(['contacts_desc' => ['ranking' => ['desc(name)']]], $this->modelHelper->getReplicasSettings(new Model14()));
+
+        $this->assertEquals([], $this->modelHelper->getReplicasSettings(new Model15(), 'index1'));
+        $this->assertEquals(['model_14_desc' => ['ranking' => ['desc(name)']]], $this->modelHelper->getReplicasSettings(new Model15(), 'index2'));
     }
 }

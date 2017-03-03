@@ -88,13 +88,21 @@ class ModelHelper
         return property_exists($model, 'objectIdKey') ? $model::$objectIdKey : $model->getKeyName();
     }
 
-    public function getSettings(Model $model)
+    public function getSettings(Model $model, $indexName = null)
     {
+        if (method_exists($model, 'algoliaSettings')) {
+            return $model->algoliaSettings($indexName);
+        }
+
         return property_exists($model, 'algoliaSettings') ? $model->algoliaSettings : [];
     }
 
-    public function getReplicasSettings(Model $model)
+    public function getReplicasSettings(Model $model, $indexName = null)
     {
+        if (method_exists($model, 'replicasSettings')) {
+            return $model->replicasSettings($indexName);
+        }
+
         $replicas_settings = property_exists($model, 'replicasSettings') ? $model->replicasSettings : [];
 
         // Backward compatibility
