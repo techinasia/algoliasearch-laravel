@@ -171,7 +171,7 @@ class AlgoliaEloquentTraitTest extends TestCase
 
         $model15 = new Model15();
 
-        $model15->setSettings();
+        $this->assertEquals(null, $model15->setSettings());
     }
 
     public function testSetSynonyms()
