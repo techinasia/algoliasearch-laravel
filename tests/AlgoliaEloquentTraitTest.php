@@ -146,6 +146,7 @@ class AlgoliaEloquentTraitTest extends TestCase
     {
         $index1 = Mockery::mock('\AlgoliaSearch\Index');
         $index1->shouldReceive('clearSynonyms');
+        $index1->indexName = 'index1';
 
         $index1->shouldReceive('setSettings')->with([
             'replicas' => []
@@ -160,6 +161,7 @@ class AlgoliaEloquentTraitTest extends TestCase
         $index2->shouldReceive('setSettings')->with([
             'ranking' => ['desc(name)'],
         ]);
+        $index2->indexName = 'index2';
 
         $modelHelper = Mockery::mock('\AlgoliaSearch\Laravel\ModelHelper')->makePartial();
         $modelHelper->shouldReceive('getIndices')->andReturn([
