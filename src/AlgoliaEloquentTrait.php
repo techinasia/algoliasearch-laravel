@@ -170,9 +170,9 @@ trait AlgoliaEloquentTrait
         foreach ($indices as $key => $index) {
             $b = true;
 
-            $settings = $modelHelper->getSettings($this, $key);
+            $settings = $modelHelper->getSettings($this, $index->indexName);
 
-            $replicas_settings = $modelHelper->getReplicasSettings($this, $key);
+            $replicas_settings = $modelHelper->getReplicasSettings($this, $index->indexName);
             $replicas = isset($settings['replicas']) ? $settings['replicas'] : [];
 
             // Backward compatibility
