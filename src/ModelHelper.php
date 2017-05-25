@@ -122,7 +122,11 @@ class ModelHelper
 
     public function getFinalIndexName(Model $model, $indexName)
     {
-        $env_suffix = property_exists($model, 'perEnvironment') && $model::$perEnvironment === true ? '_'.\App::environment() : '';
+        $env_suffix = '';
+
+        if (property_exists($model, 'perEnvironment') && $model::$perEnvironment === true && \App::environment() !== 'production') {
+            $env_suffix = '_'.\App::environment();
+        }
 
         return $indexName.$env_suffix;
     }

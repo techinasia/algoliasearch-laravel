@@ -3,6 +3,7 @@
 namespace AlgoliaSearch\Tests;
 
 use AlgoliaSearch\Tests\Models\Model1;
+use AlgoliaSearch\Tests\Models\Model12;
 use AlgoliaSearch\Tests\Models\Model14;
 use AlgoliaSearch\Tests\Models\Model15;
 use AlgoliaSearch\Tests\Models\Model16;
@@ -101,5 +102,17 @@ class ModelHelperTest extends TestCase
 
         $this->assertEquals([], $this->modelHelper->getReplicasSettings(new Model15(), 'index1'));
         $this->assertEquals(['model_15_desc' => ['ranking' => ['desc(name)']]], $this->modelHelper->getReplicasSettings(new Model15(), 'index2'));
+    }
+
+    public function testGetFinalIndexName()
+    {
+        $originalEnv = $this->app->environment();
+
+        $this->app['env'] = 'testing';
+        $this->assertEquals('foo_testing', $this->modelHelper->getFinalIndexName(new Model12(), 'foo'));
+        $this->app['env'] = 'production';
+        $this->assertEquals('foo', $this->modelHelper->getFinalIndexName(new Model12(), 'foo'));
+
+        $this->app['env'] = $originalEnv;
     }
 }
